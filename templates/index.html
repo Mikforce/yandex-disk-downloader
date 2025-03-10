@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Яндекс.Диск Браузер</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Яндекс.Диск Браузер</h1>
+
+        <form method="post">
+            <div class="form-group">
+                <label for="public_key">Публичная ссылка:</label>
+                <input type="text" class="form-control" id="public_key" name="public_key" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Получить список файлов</button>
+        </form>
+
+        {% if error_message %}
+            <div class="alert alert-danger mt-3">{{ error_message }}</div>
+        {% endif %}
+
+        {% if files %}
+            <h2>Файлы:</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Имя</th>
+                        <th>Тип</th>
+                        <th>Действие</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in files %}
+                        <tr>
+                            <td>{{ file.name }}</td>
+                            <td>{{ file.type }}</td>
+                            <td>
+                                {% if file.type == 'file' %}
+                                    <form method="post" action="/download">
+                                        <input type="hidden" name="download_url" value="{{ file.file }}">
+                                        <input type="hidden" name="filename" value="{{ file.name }}">
+                                        <button type="submit" class="btn btn-success btn-sm">Скачать</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</body>
+</html>
