@@ -20,6 +20,14 @@
                 <label for="public_key">Публичная ссылка:</label>
                 <input type="text" class="form-control" id="public_key" name="public_key" required>
             </div>
+            <div class="form-group">
+                <label for="filter_type">Фильтр по типу:</label>
+                <select class="form-control" id="filter_type" name="filter_type">
+                    <option value="">Все типы</option>
+                    <option value="file">Только файлы</option>
+                    <option value="dir">Только папки</option>
+                </select>
+            </div>
             <button type="submit" class="btn btn-primary">Получить список файлов</button>
         </form>
 
@@ -29,32 +37,32 @@
 
         {% if files %}
             <h2>Файлы:</h2>
+             <form method="post" action="/download">
             <table class="table table-striped">
                 <thead>
                     <tr>
+                        <th>Выбрать</th>
                         <th>Имя</th>
                         <th>Тип</th>
-                        <th>Действие</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for file in files %}
                         <tr>
-                            <td>{{ file.name }}</td>
-                            <td>{{ file.type }}</td>
                             <td>
                                 {% if file.type == 'file' %}
-                                    <form method="post" action="/download">
-                                        <input type="hidden" name="download_url" value="{{ file.file }}">
-                                        <input type="hidden" name="filename" value="{{ file.name }}">
-                                        <button type="submit" class="btn btn-success btn-sm">Скачать</button>
-                                    </form>
+                                     <input type="checkbox" name="selected_files" value="{{ file.name }}||{{ file.file }}">
                                 {% endif %}
                             </td>
+                            <td>{{ file.name }}</td>
+                            <td>{{ file.type }}</td>
+
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
+              <button type="submit" class="btn btn-success">Скачать выбранные</button>
+             </form>
         {% endif %}
     </div>
 </body>
